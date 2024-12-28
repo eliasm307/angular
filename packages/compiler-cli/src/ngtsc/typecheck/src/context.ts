@@ -239,6 +239,7 @@ export class TypeCheckContextImpl implements TypeCheckContext {
     isStandalone: boolean,
     preserveWhitespaces: boolean,
   ): void {
+    debugger;
     if (!this.host.shouldCheckComponent(ref.node)) {
       return;
     }
@@ -248,6 +249,8 @@ export class TypeCheckContextImpl implements TypeCheckContext {
     const templateId = fileData.sourceManager.getTemplateId(ref.node);
 
     const templateDiagnostics: TemplateDiagnostic[] = [];
+
+    debugger;
 
     if (parseErrors !== null) {
       templateDiagnostics.push(...getTemplateDiagnostics(parseErrors, templateId, sourceMapping));
@@ -291,11 +294,13 @@ export class TypeCheckContextImpl implements TypeCheckContext {
 
     const usedPipes: Reference<ClassDeclaration<ts.ClassDeclaration>>[] = [];
     for (const name of boundTarget.getUsedPipes()) {
+      debugger;
       if (!pipes.has(name)) {
         continue;
       }
       usedPipes.push(pipes.get(name)!.ref as Reference<ClassDeclaration<ts.ClassDeclaration>>);
     }
+    debugger;
 
     const inliningRequirement = requiresInlineTypeCheckBlock(
       ref,

@@ -64,6 +64,7 @@ export function makeTemplateDiagnostic(
       start: span.start.offset,
       length: span.end.offset - span.start.offset,
       relatedInformation,
+      // reportsDeprecated,
     };
   } else if (mapping.type === 'indirect' || mapping.type === 'external') {
     // For indirect mappings (template was declared inline, but ngtsc couldn't map it directly

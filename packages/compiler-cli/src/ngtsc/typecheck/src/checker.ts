@@ -305,6 +305,7 @@ export class TemplateTypeCheckerImpl implements TemplateTypeChecker {
       const fileRecord = this.state.get(sfPath)!;
 
       const typeCheckProgram = this.programDriver.getProgram();
+      debugger;
 
       const diagnostics: (ts.Diagnostic | null)[] = [];
       if (fileRecord.hasInlines) {
@@ -330,6 +331,9 @@ export class TemplateTypeCheckerImpl implements TemplateTypeChecker {
         }
       }
 
+      if (diagnostics.length) {
+        debugger;
+      }
       return diagnostics.filter(
         (diag: ts.Diagnostic | null): diag is ts.Diagnostic => diag !== null,
       );
@@ -375,6 +379,10 @@ export class TemplateTypeCheckerImpl implements TemplateTypeChecker {
 
       for (const templateData of shimRecord.templates.values()) {
         diagnostics.push(...templateData.templateDiagnostics);
+      }
+
+      if (diagnostics.length) {
+        debugger;
       }
 
       return diagnostics.filter(

@@ -1,0 +1,118 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "inputs": [
+    {
+      "id": "pickTest",
+      "type": "command",
+      "command": "bazel.pickTarget",
+      "args": {
+        "query": "kind('.*_test', //...:*)",
+        "placeHolder": "Which test?"
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "label": "Test",
+      "type": "bazel",
+      "command": "test",
+      "targets": ["${input:pickTest}"],
+      "options": ["--runs_per_test=9"]
+    },
+    {
+      "label": "IVY:packages/core/test/...",
+      "type": "shell",
+      "command": "${workspaceFolder}/node_modules/.bin/bazelisk",
+      "args": [
+        "test",
+        "packages/core/test",
+        "packages/core/test/acceptance",
+        "packages/core/test/render3"
+      ],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "VE:packages/core/test/...",
+      "type": "shell",
+      "command": "${workspaceFolder}/node_modules/.bin/bazelisk",
+      "args": [
+        "test",
+        "packages/core/test",
+        "packages/core/test/acceptance",
+        "packages/core/test/render3"
+      ],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "IVY:packages/core/test/acceptance",
+      "type": "shell",
+      "command": "${workspaceFolder}/node_modules/.bin/bazelisk",
+      "args": ["test", "packages/core/test/acceptance"],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "VE:packages/core/test/acceptance",
+      "type": "shell",
+      "command": "${workspaceFolder}/node_modules/.bin/bazelisk",
+      "args": ["test", "packages/core/test/acceptance"],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "IVY:packages/core/test",
+      "type": "shell",
+      "command": "${workspaceFolder}/node_modules/.bin/bazelisk",
+      "args": ["test", "packages/core/test"],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "VE:packages/core/test",
+      "type": "shell",
+      "command": "${workspaceFolder}/node_modules/.bin/bazelisk",
+      "args": ["test", "packages/core/test"],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "IVY:packages/core/test/render3",
+      "type": "shell",
+      "command": "${workspaceFolder}/node_modules/.bin/bazelisk",
+      "args": ["test", "packages/core/test/render3"],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Run Bazel Test with Debug",
+      "type": "shell",
+      "command": "bazel test --config=debug //packages/compiler-cli/src/ngtsc/typecheck/test",
+      "problemMatcher": []
+    }
+  ]
+}

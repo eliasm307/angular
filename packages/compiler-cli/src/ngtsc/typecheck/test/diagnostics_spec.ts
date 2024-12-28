@@ -248,6 +248,7 @@ runInEachFileSystem(() => {
     });
 
     it('produces diagnostics for deprecated pipes', () => {
+      debugger;
       const messages = diagnose(
         `<div>{{ person.name | pipe:person.age:1 }}</div>`,
         `

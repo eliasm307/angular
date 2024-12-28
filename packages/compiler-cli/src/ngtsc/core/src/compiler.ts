@@ -680,8 +680,9 @@ export class NgCompiler {
   getDeprecatedDiagnosticsForTemplate(file: string): ts.Diagnostic[] {
     const compilation = this.ensureAnalyzed();
     const ttc = compilation.templateTypeChecker;
-    ttc.getUsedDirectives;
+    // ttc.getUsedDirectives;
     const diagnostics: ts.Diagnostic[] = [];
+    return diagnostics;
   }
 
   /**
