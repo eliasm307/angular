@@ -247,6 +247,28 @@ runInEachFileSystem(() => {
       ]);
     });
 
+    it('produces diagnostics for deprecated pipes', () => {
+      const messages = diagnose(
+        `<div>{{ person.name | pipe:person.age:1 }}</div>`,
+        `
+        /** @deprecated foo */
+        class Pipe {
+          transform(value: string, a: string, b: string): string { return a + b; }
+        }
+        class TestComponent {
+          person: {
+            name: string;
+            age: number;
+          };
+        }`,
+        [{type: 'pipe', name: 'Pipe', pipeName: 'pipe'}],
+      );
+
+      expect(messages).toEqual([
+        `TestComponent.html(1, 35): Argument of type 'number' is not assignable to parameter of type 'string'.`,
+      ]);
+    });
+
     it('does not repeat diagnostics for missing pipes in directive inputs', () => {
       // The directive here is structured so that a type constructor is used, which results in each
       // input binding being processed twice. This results in the 'uppercase' pipe being resolved

@@ -7,7 +7,7 @@
   "bugs": "https://github.com/angular/angular/issues",
   "license": "MIT",
   "engines": {
-    "node": "^18.19.1 || ^20.11.1",
+    "node": "^18.19.1 || ^20.11.1 || >=22",
     "yarn": ">=1.22.4 <2",
     "npm": "Please use yarn instead of NPM to install dependencies"
   },
@@ -233,8 +233,5 @@
   },
   "// 3": "Ensure that transitive dependencies on `https-proxy-agent` are at minimum v5 as older versions patch NodeJS directly, breaking tools like webdriver which is used by the karma-sauce-launcher as an example.",
   "// 4": "Ensure that a single instance of the `saucelabs` package is used. Protractor and the Karma sauce launcher pull this package as dependency. A single instance allows for e.g. easier patching in the Karma config.",
-  "resolutions": {
-    "**/https-proxy-agent": "7.0.6",
-    "**/saucelabs": "8.0.0"
-  }
+  "packageManager": "yarn@1.22.22"
 }

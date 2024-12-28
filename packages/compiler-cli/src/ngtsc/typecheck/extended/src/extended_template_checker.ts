@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ParseSourceSpan} from '@angular/compiler';
+import type {ParseSourceSpan} from '@angular/compiler';
 import ts from 'typescript';
 
-import {DiagnosticCategoryLabel, NgCompilerOptions} from '../../../core/api';
-import {ErrorCode, ExtendedTemplateDiagnosticName} from '../../../diagnostics';
-import {NgTemplateDiagnostic, TemplateDiagnostic, TemplateTypeChecker} from '../../api';
-import {
+import {DiagnosticCategoryLabel, type NgCompilerOptions} from '../../../core/api';
+import type {ErrorCode, ExtendedTemplateDiagnosticName} from '../../../diagnostics';
+import type {NgTemplateDiagnostic, TemplateDiagnostic, TemplateTypeChecker} from '../../api';
+import type {
   ExtendedTemplateChecker,
   TemplateCheck,
   TemplateCheckFactory,

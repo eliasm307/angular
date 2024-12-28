@@ -136,6 +136,11 @@ export class LanguageService {
             diagnostics.push(...compiler.getDiagnosticsForComponent(component));
           }
         }
+
+        // todo add an option to enabled/disable this incase it has performance implications
+        // add deprecated messages
+        const deprecatedMessages = compiler.getDeprecatedDiagnosticsForTemplate(fileName);
+        diagnostics.push(...deprecatedMessages);
       }
       if (this.config.suppressAngularDiagnosticCodes) {
         diagnostics = diagnostics.filter(

@@ -7,31 +7,34 @@
  */
 
 import {
-  AST,
+  type AST,
   ASTWithSource,
   ImplicitReceiver,
   ParsedEventType,
-  PropertyRead,
-  PropertyWrite,
+  type PropertyRead,
+  type PropertyWrite,
   RecursiveAstVisitor,
   TmplAstBoundEvent,
   TmplAstLetDeclaration,
-  TmplAstNode,
+  type TmplAstNode,
   TmplAstRecursiveVisitor,
   TmplAstVariable,
+  type TmplAstBoundAttribute,
+  type TmplAstTemplate,
 } from '@angular/compiler';
 import ts from 'typescript';
 
 import {ErrorCode, ngErrorCode} from '../../../diagnostics';
-import {TemplateDiagnostic, TemplateTypeChecker} from '../../api';
+import type {TemplateDiagnostic, TemplateTypeChecker} from '../../api';
 import {isSignalReference} from '../../src/symbol_util';
-import {TemplateSemanticsChecker} from '../api/api';
+import type {TemplateSemanticsChecker} from '../api/api';
 
 export class TemplateSemanticsCheckerImpl implements TemplateSemanticsChecker {
   constructor(private templateTypeChecker: TemplateTypeChecker) {}
 
   getDiagnosticsForComponent(component: ts.ClassDeclaration): TemplateDiagnostic[] {
     const template = this.templateTypeChecker.getTemplate(component);
+
     return template !== null
       ? TemplateSemanticsVisitor.visit(template, component, this.templateTypeChecker)
       : [];
@@ -40,7 +43,10 @@ export class TemplateSemanticsCheckerImpl implements TemplateSemanticsChecker {
 
 /** Visitor that verifies the semantics of a template. */
 class TemplateSemanticsVisitor extends TmplAstRecursiveVisitor {
-  private constructor(private expressionVisitor: ExpressionsSemanticsVisitor) {
+  private constructor(
+    private expressionVisitor: ExpressionsSemanticsVisitor,
+    private deprecatedVisitor: DeprecatedSemanticsVisitor,
+  ) {
     super();
   }
 
@@ -55,14 +61,27 @@ class TemplateSemanticsVisitor extends TmplAstRecursiveVisitor {
       component,
       diagnostics,
     );
-    const templateVisitor = new TemplateSemanticsVisitor(expressionVisitor);
+    const deprecatedVisitor = new DeprecatedSemanticsVisitor(
+      templateTypeChecker,
+      component,
+      diagnostics,
+    );
+    const templateVisitor = new TemplateSemanticsVisitor(expressionVisitor, deprecatedVisitor);
+    debugger;
     nodes.forEach((node) => node.visit(templateVisitor));
+
     return diagnostics;
+  }
+
+  override visitBoundAttribute(attribute: TmplAstBoundAttribute): void {
+    super.visitBoundAttribute(attribute);
+    attribute.value.visit(this.deprecatedVisitor, attribute);
   }
 
   override visitBoundEvent(event: TmplAstBoundEvent): void {
     super.visitBoundEvent(event);
     event.handler.visit(this.expressionVisitor, event);
+    event.handler.visit(this.deprecatedVisitor, event);
   }
 }
 
@@ -81,12 +100,12 @@ class ExpressionsSemanticsVisitor extends RecursiveAstVisitor {
     this.checkForIllegalWriteInEventBinding(ast, context);
   }
 
-  override visitPropertyRead(ast: PropertyRead, context: TmplAstNode) {
+  override visitPropertyRead(ast: PropertyRead, context: TmplAstNode): void {
     super.visitPropertyRead(ast, context);
     this.checkForIllegalWriteInTwoWayBinding(ast, context);
   }
 
-  private checkForIllegalWriteInEventBinding(ast: PropertyWrite, context: TmplAstNode) {
+  private checkForIllegalWriteInEventBinding(ast: PropertyWrite, context: TmplAstNode): void {
     if (!(context instanceof TmplAstBoundEvent) || !(ast.receiver instanceof ImplicitReceiver)) {
       return;
     }
@@ -98,7 +117,7 @@ class ExpressionsSemanticsVisitor extends RecursiveAstVisitor {
     }
   }
 
-  private checkForIllegalWriteInTwoWayBinding(ast: PropertyRead, context: TmplAstNode) {
+  private checkForIllegalWriteInTwoWayBinding(ast: PropertyRead, context: TmplAstNode): void {
     // Only check top-level property reads inside two-way bindings for illegal assignments.
     if (
       !(context instanceof TmplAstBoundEvent) ||
@@ -154,6 +173,20 @@ class ExpressionsSemanticsVisitor extends RecursiveAstVisitor {
         },
       ],
     );
+  }
+}
+
+class DeprecatedSemanticsVisitor extends RecursiveAstVisitor {
+  constructor(
+    private templateTypeChecker: TemplateTypeChecker,
+    private component: ts.ClassDeclaration,
+    private diagnostics: TemplateDiagnostic[],
+  ) {
+    super();
+  }
+
+  override visitAll(asts: AST[], context: any): void {
+    debugger;
   }
 }
 
