@@ -11,3 +11,5 @@
  * Used to disable it conditionally in internal builds.
  */
 export const UNUSED_STANDALONE_IMPORTS_RULE_ENABLED = true;
+
+export const DEPRECATED_USAGES_RULE_ENABLED = true;

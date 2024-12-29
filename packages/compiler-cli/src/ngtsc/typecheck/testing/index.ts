@@ -7,31 +7,31 @@
  */
 
 import {
-  BindingPipe,
+  type BindingPipe,
   CssSelector,
   ParseSourceFile,
-  ParseSourceSpan,
+  type ParseSourceSpan,
   parseTemplate,
-  ParseTemplateOptions,
-  PropertyRead,
-  PropertyWrite,
+  type ParseTemplateOptions,
+  type PropertyRead,
+  type PropertyWrite,
   R3TargetBinder,
-  SchemaMetadata,
+  type SchemaMetadata,
   SelectorMatcher,
-  TmplAstElement,
-  TmplAstLetDeclaration,
+  type TmplAstElement,
+  type TmplAstLetDeclaration,
 } from '@angular/compiler';
-import {readFileSync} from 'fs';
-import path from 'path';
+import {readFileSync} from 'node:fs';
+import path from 'node:path';
 import ts from 'typescript';
 
 import {
   absoluteFrom,
-  AbsoluteFsPath,
+  type AbsoluteFsPath,
   getSourceFileOrError,
   LogicalFileSystem,
 } from '../../file_system';
-import {TestFile} from '../../file_system/testing';
+import type {TestFile} from '../../file_system/testing';
 import {
   AbsoluteModuleStrategy,
   LocalIdentifierStrategy,
@@ -45,40 +45,40 @@ import {NOOP_INCREMENTAL_BUILD} from '../../incremental';
 import {
   ClassPropertyMapping,
   CompoundMetadataReader,
-  DecoratorInputTransform,
-  DirectiveMeta,
+  type DecoratorInputTransform,
+  type DirectiveMeta,
   HostDirectivesResolver,
-  InputMapping,
+  type InputMapping,
   MatchSource,
-  MetadataReaderWithIndex,
+  type MetadataReaderWithIndex,
   MetaKind,
-  NgModuleIndex,
-  PipeMeta,
+  type NgModuleIndex,
+  type PipeMeta,
 } from '../../metadata';
 import {NOOP_PERF_RECORDER} from '../../perf';
 import {TsCreateProgramDriver} from '../../program_driver';
 import {
-  ClassDeclaration,
+  type ClassDeclaration,
   isNamedClassDeclaration,
   TypeScriptReflectionHost,
 } from '../../reflection';
 import {
   ComponentScopeKind,
-  ComponentScopeReader,
-  LocalModuleScope,
-  ScopeData,
+  type ComponentScopeReader,
+  type LocalModuleScope,
+  type ScopeData,
   TypeCheckScopeRegistry,
 } from '../../scope';
 import {makeProgram, resolveFromRunfiles} from '../../testing';
 import {getRootDirs} from '../../util/src/typescript';
 import {
   OptimizeFor,
-  ProgramTypeCheckAdapter,
-  TemplateDiagnostic,
-  TemplateTypeChecker,
-  TypeCheckContext,
+  type ProgramTypeCheckAdapter,
+  type TemplateDiagnostic,
+  type TemplateTypeChecker,
+  type TypeCheckContext,
 } from '../api';
-import {
+import type {
   TemplateId,
   TemplateSourceMapping,
   TypeCheckableDirectiveMeta,
@@ -86,8 +86,8 @@ import {
   TypeCheckingConfig,
 } from '../api/api';
 import {TemplateTypeCheckerImpl} from '../src/checker';
-import {DomSchemaChecker} from '../src/dom';
-import {OutOfBandDiagnosticRecorder} from '../src/oob';
+import type {DomSchemaChecker} from '../src/dom';
+import type {OutOfBandDiagnosticRecorder} from '../src/oob';
 import {TypeCheckShimGenerator} from '../src/shim';
 import {TcbGenericContextBehavior} from '../src/type_check_block';
 import {TypeCheckFile} from '../src/type_check_file';
@@ -377,7 +377,7 @@ export function tcb(
   const {nodes, errors} = parseTemplate(template, templateUrl, templateParserOptions);
 
   if (errors !== null) {
-    throw new Error('Template parse errors: \n' + errors.join('\n'));
+    throw new Error(`Template parse errors: \n${errors.join('\n')}`);
   }
 
   const {matcher, pipes} = prepareDeclarations(
@@ -614,7 +614,7 @@ export function setup(
         const templateFile = new ParseSourceFile(template, templateUrl);
         const {nodes, errors} = parseTemplate(template, templateUrl, overrides.parseOptions);
         if (errors !== null) {
-          throw new Error('Template parse errors: \n' + errors.join('\n'));
+          throw new Error(`Template parse errors: \n${errors.join('\n')}`);
         }
 
         const {matcher, pipes} = prepareDeclarations(
@@ -690,15 +690,15 @@ export function setup(
             exported: emptyScope,
           };
         }
-        const scope = scopeMap.get(clazz)!;
+        const scope = scopeMap.get(clazz);
 
         return {
           kind: ComponentScopeKind.NgModule,
           ngModule,
-          compilation: scope,
+          compilation: scope!,
           reexports: [],
           schemas: [],
-          exported: scope,
+          exported: scope!,
         };
       } catch (e) {
         // No NgModule was found for this class, so it has no scope.
@@ -771,6 +771,7 @@ export function diagnose(
     {config, options},
   );
   const sf = getSourceFileOrError(program, sfPath);
+
   const diagnostics = templateTypeChecker.getDiagnosticsForFile(sf, OptimizeFor.WholeProgram);
 
   return diagnostics.map((diag) => {
@@ -794,7 +795,7 @@ function getFakeMetadataReader(
     getDirectiveMetadata(node: Reference<ClassDeclaration>): DirectiveMeta | null {
       return fakeMetadataRegistry.get(node.debugName) ?? null;
     },
-    getKnown(kind: MetaKind): Array<ClassDeclaration> {
+    getKnown(kind: MetaKind): ClassDeclaration[] {
       switch (kind) {
         // TODO: This is not needed for these ngtsc tests, but may be wanted in the future.
         default:
@@ -806,7 +807,7 @@ function getFakeMetadataReader(
 
 function getFakeNgModuleIndex(fakeMetadataRegistry: Map<any, DirectiveMeta | null>): NgModuleIndex {
   return {
-    getNgModulesExporting(trait: ClassDeclaration): Array<Reference<ClassDeclaration>> {
+    getNgModulesExporting(trait: ClassDeclaration): Reference<ClassDeclaration>[] {
       return [];
     },
   } as NgModuleIndex;
@@ -825,7 +826,7 @@ function prepareDeclarations(
     getFakeMetadataReader(metadataRegistry as Map<string, DirectiveMeta>),
   );
   const directives: DirectiveMeta[] = [];
-  const registerDirective = (decl: TestDirective) => {
+  const registerDirective = (decl: TestDirective): void => {
     const meta = getDirectiveMetaFromDeclaration(decl, resolveDeclaration);
     directives.push(meta as DirectiveMeta);
     metadataRegistry.set(decl.name, meta);
@@ -897,7 +898,7 @@ function getDirectiveMetaFromDeclaration(
     ngContentSelectors: decl.ngContentSelectors || null,
     preserveWhitespaces: decl.preserveWhitespaces ?? false,
     isExplicitlyDeferred: false,
-    imports: decl.imports,
+    imports: decl.imports!,
     rawImports: null,
     hostDirectives:
       decl.hostDirectives === undefined
@@ -999,7 +1000,7 @@ function makeScope(program: ts.Program, sf: ts.SourceFile, decls: TestDeclaratio
   return scope;
 }
 
-function parseInputOutputMappingArray(values: string[]) {
+function parseInputOutputMappingArray(values: string[]): {[field: string]: string} {
   return values.reduce(
     (results, value) => {
       // Either the value is 'field' or 'field: property'. In the first case, `property` will
@@ -1013,7 +1014,7 @@ function parseInputOutputMappingArray(values: string[]) {
 }
 
 export class NoopSchemaChecker implements DomSchemaChecker {
-  get diagnostics(): ReadonlyArray<TemplateDiagnostic> {
+  get diagnostics(): readonly TemplateDiagnostic[] {
     return [];
   }
 
@@ -1034,7 +1035,7 @@ export class NoopSchemaChecker implements DomSchemaChecker {
 }
 
 export class NoopOobRecorder implements OutOfBandDiagnosticRecorder {
-  get diagnostics(): ReadonlyArray<TemplateDiagnostic> {
+  get diagnostics(): readonly TemplateDiagnostic[] {
     return [];
   }
   missingReferenceTarget(): void {}

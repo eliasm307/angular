@@ -15,7 +15,8 @@ import {SourceFileValidatorRule} from './rules/api';
 import {InitializerApiUsageRule} from './rules/initializer_api_usage_rule';
 import {UnusedStandaloneImportsRule} from './rules/unused_standalone_imports_rule';
 import {TemplateTypeChecker, TypeCheckingConfig} from '../../typecheck/api';
-import {UNUSED_STANDALONE_IMPORTS_RULE_ENABLED} from './config';
+import {DEPRECATED_USAGES_RULE_ENABLED, UNUSED_STANDALONE_IMPORTS_RULE_ENABLED} from './config';
+import {DeprecatedUsagesRule} from './rules/deprecated_usages_rule';
 
 /**
  * Validates that TypeScript files match a specific set of rules set by the Angular compiler.
@@ -38,6 +39,12 @@ export class SourceFileValidator {
           typeCheckingConfig,
           importedSymbolsTracker,
         ),
+      );
+    }
+
+    if (DEPRECATED_USAGES_RULE_ENABLED) {
+      this.rules.push(
+        new DeprecatedUsagesRule(templateTypeChecker, typeCheckingConfig, importedSymbolsTracker),
       );
     }
   }

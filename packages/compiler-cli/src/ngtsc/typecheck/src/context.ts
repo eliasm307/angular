@@ -294,13 +294,22 @@ export class TypeCheckContextImpl implements TypeCheckContext {
 
     const usedPipes: Reference<ClassDeclaration<ts.ClassDeclaration>>[] = [];
     for (const name of boundTarget.getUsedPipes()) {
+      const pipeMeta = pipes.get(name);
       debugger;
-      if (!pipes.has(name)) {
+      if (!pipeMeta) {
         continue;
       }
-      usedPipes.push(pipes.get(name)!.ref as Reference<ClassDeclaration<ts.ClassDeclaration>>);
+      usedPipes.push(pipeMeta.ref as Reference<ClassDeclaration<ts.ClassDeclaration>>);
+
+      const deprecatedTag = ts.getJSDocDeprecatedTag(pipeMeta.ref.node);
+      if (deprecatedTag) {
+        const deprecatedTagText = deprecatedTag.getText() || '';
+        // todo store deprecated pipe with its tag
+      }
     }
     debugger;
+
+    // todo visit nodes to determine if they are deprecated
 
     const inliningRequirement = requiresInlineTypeCheckBlock(
       ref,

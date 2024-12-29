@@ -19,6 +19,7 @@ import type {
 
 import type {SourceFileValidatorRule} from './api';
 
+// todo this could be a good example of doing a deprecated rule
 /**
  * Rule that flags unused symbols inside of the `imports` array of a component.
  */

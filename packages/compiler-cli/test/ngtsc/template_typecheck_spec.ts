@@ -8291,5 +8291,11 @@ suppress
         expect(diags.length).toBe(0);
       });
     });
+
+    describe('deprecated usages', () => {
+      it('has tests', () => {
+        throw Error('not implemented');
+      });
+    });
   });
 });
