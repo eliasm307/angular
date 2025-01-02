@@ -354,6 +354,8 @@ export function defaultGatherDiagnostics(program: api.Program): ReadonlyArray<ts
       ...program.getNgStructuralDiagnostics(),
     ]);
 
+  debugger;
+
   // Check Angular semantic diagnostics
   checkOtherDiagnostics =
     checkOtherDiagnostics && checkDiagnostics(program.getNgSemanticDiagnostics());

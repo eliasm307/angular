@@ -8293,12 +8293,13 @@ suppress
     });
 
     fdescribe('deprecated usages', () => {
-      fit('should not report imports only used inside @defer blocks', () => {
+      fit('eli tmp', () => {
         env.write(
           'test.ts',
           `
           import {Component, Pipe} from '@angular/core';
 
+          /** @deprecated foo */
           @Pipe({name: 'used', standalone: true})
           export class UsedPipe {
             transform(value: number) {
@@ -8307,16 +8308,16 @@ suppress
           }
 
           @Component({
-            template: "<span [attr.id]="1 | used"></span>",
+            template: '<span [attr.id]="1 | used"></span>',
             standalone: true,
             imports: [UsedPipe]
           })
           export class MyComp {}
         `,
         );
-
+        debugger;
         const diags = env.driveDiagnostics();
-        expect(diags.length).toBe(0);
+        expect(diags).toEqual([]);
       });
 
       it('has tests', () => {

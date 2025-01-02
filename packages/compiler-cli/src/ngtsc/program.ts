@@ -225,6 +225,7 @@ export class NgtscProgram implements api.Program {
     fileName?: string | undefined,
     cancellationToken?: ts.CancellationToken | undefined,
   ): readonly ts.Diagnostic[] {
+    debugger;
     let sf: ts.SourceFile | undefined = undefined;
     if (fileName !== undefined) {
       sf = this.tsProgram.getSourceFile(fileName);

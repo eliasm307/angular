@@ -11,8 +11,8 @@ export class DeprecatedUsagesRule implements SourceFileValidatorRule {
   ) {}
 
   shouldCheck(sourceFile: SourceFile): boolean {
-    console.log(DeprecatedUsagesRule.name, 'shouldCheck', sourceFile.fileName);
     debugger;
+    console.log(DeprecatedUsagesRule.name, 'shouldCheck', sourceFile.fileName);
     console.error('not implemented');
     return false;
   }

@@ -578,6 +578,7 @@ export class NgCompiler {
    * Get all Angular-related diagnostics for this compilation.
    */
   getDiagnostics(): ts.Diagnostic[] {
+    debugger;
     const diagnostics: ts.Diagnostic[] = [...this.getNonTemplateDiagnostics()];
 
     // Type check code may throw fatal diagnostic errors if e.g. the type check

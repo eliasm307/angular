@@ -83,7 +83,9 @@
       "sourceMaps": true,
       "timeout": 600000,
       "console": "integratedTerminal",
-      "outFiles": ["${workspaceFolder}/dist/out/**/packages/**/*.js"]
+      "outFiles": ["${workspaceFolder}/dist/out/**/packages/**/*.js"],
+      "autoAttachChildProcesses": true,
+      "attachSimplePort": 9229
     },
     {
       "name": "Debug Angular Tests with Bazel",
@@ -110,6 +112,8 @@
       "resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"]
     },
     {
+      // run this once then dont stop the debugger, just re-run the config and the attached debugger will be re-used
+      // investigate if the debugger can be started separately and the tests launched separately
       "name": "Eli2 Debug Node.js Test with Bazel (Working)",
       "type": "node",
       "request": "attach",
@@ -122,10 +126,11 @@
       "internalConsoleOptions": "neverOpen",
       "resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"],
       "preLaunchTask": "Run Bazel Test with Debug",
-      "showAsyncStacks": true,
-      "attachExistingChildren": true,
-      "autoAttachChildProcesses": true,
       "continueOnAttach": true
+      // "showAsyncStacks": true,
+      // "attachExistingChildren": true,
+      // "autoAttachChildProcesses": true,
+      // "continueOnAttach": true
     }
   ]
 }

@@ -30,6 +30,7 @@ export class SourceFileValidator {
     templateTypeChecker: TemplateTypeChecker,
     typeCheckingConfig: TypeCheckingConfig,
   ) {
+    debugger;
     this.rules = [new InitializerApiUsageRule(reflector, importedSymbolsTracker)];
 
     if (UNUSED_STANDALONE_IMPORTS_RULE_ENABLED) {
