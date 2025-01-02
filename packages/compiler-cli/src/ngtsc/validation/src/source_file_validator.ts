@@ -54,6 +54,7 @@ export class SourceFileValidator {
    * @param sourceFile File to be checked.
    */
   getDiagnosticsForFile(sourceFile: ts.SourceFile): ts.Diagnostic[] | null {
+    debugger;
     if (sourceFile.isDeclarationFile || sourceFile.fileName.endsWith('.ngtypecheck.ts')) {
       return null;
     }

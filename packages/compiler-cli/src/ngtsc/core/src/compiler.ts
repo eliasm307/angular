@@ -1178,6 +1178,7 @@ export class NgCompiler {
   }
 
   private getTemplateDiagnostics(): ReadonlyArray<ts.Diagnostic> {
+    debugger;
     const compilation = this.ensureAnalyzed();
     const diagnostics: ts.Diagnostic[] = [];
 

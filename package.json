@@ -45,7 +45,9 @@
     "devtools:test": "bazelisk test --//devtools/projects/shell-browser/src:flag_browser=chrome -- //devtools/...",
     "docs": "[[ -n $CI ]] && echo 'Cannot run this yarn script on CI' && exit 1 || yarn ibazel run //adev:serve",
     "docs:build": "[[ -n $CI ]] && echo 'Cannot run this yarn script on CI' && exit 1 || yarn bazel build //adev:build",
-    "benchmarks": "tsx --tsconfig=scripts/tsconfig.json scripts/benchmarks/index.mts"
+    "benchmarks": "tsx --tsconfig=scripts/tsconfig.json scripts/benchmarks/index.mts",
+    "x": "bazel test --config=debug //packages/compiler-cli/test/ngtsc",
+    "clean": "bazel clean"
   },
   "// 1": "dependencies are used locally and by bazel",
   "dependencies": {

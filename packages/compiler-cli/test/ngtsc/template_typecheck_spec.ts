@@ -8292,7 +8292,33 @@ suppress
       });
     });
 
-    describe('deprecated usages', () => {
+    fdescribe('deprecated usages', () => {
+      fit('should not report imports only used inside @defer blocks', () => {
+        env.write(
+          'test.ts',
+          `
+          import {Component, Pipe} from '@angular/core';
+
+          @Pipe({name: 'used', standalone: true})
+          export class UsedPipe {
+            transform(value: number) {
+              return value * 2;
+            }
+          }
+
+          @Component({
+            template: "<span [attr.id]="1 | used"></span>",
+            standalone: true,
+            imports: [UsedPipe]
+          })
+          export class MyComp {}
+        `,
+        );
+
+        const diags = env.driveDiagnostics();
+        expect(diags.length).toBe(0);
+      });
+
       it('has tests', () => {
         throw Error('not implemented');
       });

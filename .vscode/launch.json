@@ -74,25 +74,24 @@
     {
       "name": "Eli debug",
       "type": "node",
+      "request": "launch",
       "program": "${workspaceFolder}/node_modules/.bin/bazelisk",
-      "args": [
-        "test",
-        "--test_arg=--node_options=--inspect-brk",
-        "//packages/compiler-cli/src/ngtsc/typecheck/test"
-      ],
+      "args": ["test", "packages/compiler-cli/test/ngtsc:test", "--config=debug"],
       "port": 9229,
       "address": "localhost",
       "restart": true,
       "sourceMaps": true,
       "timeout": 600000,
+      "console": "integratedTerminal",
       "outFiles": ["${workspaceFolder}/dist/out/**/packages/**/*.js"]
     },
     {
       "name": "Debug Angular Tests with Bazel",
       "type": "node",
+      "runtimeArgs": ["--inspect-brk"],
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/.bin/bazelisk",
-      "args": ["test", "--config=debug", "//packages/compiler-cli/src/ngtsc/typecheck/test"],
+      "args": ["test", "--config=debug", "//packages/compiler-cli/test/ngtsc"],
       "port": 9229,
       "console": "integratedTerminal",
       "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
@@ -122,7 +121,11 @@
       "outFiles": ["${workspaceFolder}/**/*.js"],
       "internalConsoleOptions": "neverOpen",
       "resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"],
-      "preLaunchTask": "Run Bazel Test with Debug"
+      "preLaunchTask": "Run Bazel Test with Debug",
+      "showAsyncStacks": true,
+      "attachExistingChildren": true,
+      "autoAttachChildProcesses": true,
+      "continueOnAttach": true
     }
   ]
 }

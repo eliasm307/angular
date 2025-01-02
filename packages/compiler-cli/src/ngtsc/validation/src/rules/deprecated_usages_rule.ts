@@ -1,8 +1,7 @@
 import type {Node, Diagnostic, SourceFile} from 'typescript';
 import type {SourceFileValidatorRule} from './api';
-import type {TemplateTypeChecker} from '@angular/compiler-cli/private/migrations';
 import type {ImportedSymbolsTracker} from '../../../imports';
-import type {TypeCheckingConfig} from '../../../typecheck/api';
+import type {TemplateTypeChecker, TypeCheckingConfig} from '../../../typecheck/api';
 
 export class DeprecatedUsagesRule implements SourceFileValidatorRule {
   constructor(
@@ -12,10 +11,14 @@ export class DeprecatedUsagesRule implements SourceFileValidatorRule {
   ) {}
 
   shouldCheck(sourceFile: SourceFile): boolean {
-    throw Error('not implemented');
+    console.log(DeprecatedUsagesRule.name, 'shouldCheck', sourceFile.fileName);
+    debugger;
+    console.error('not implemented');
+    return false;
   }
 
   checkNode(node: Node): Diagnostic | Diagnostic[] | null {
+    debugger;
     throw Error('not implemented');
   }
 }
